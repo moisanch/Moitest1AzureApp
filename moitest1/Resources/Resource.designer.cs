@@ -63,20 +63,41 @@ namespace moitest1
 			// aapt resource value: 0x7f070000
 			public const int LinearLayout1 = 2131165184;
 			
+			// aapt resource value: 0x7f07000a
+			public const int btnGrabar = 2131165194;
+			
 			// aapt resource value: 0x7f070003
 			public const int buttonAddToDo = 2131165187;
 			
 			// aapt resource value: 0x7f070005
 			public const int checkToDoItem = 2131165189;
 			
+			// aapt resource value: 0x7f070009
+			public const int edtPassword = 2131165193;
+			
+			// aapt resource value: 0x7f070008
+			public const int edtUsuario = 2131165192;
+			
 			// aapt resource value: 0x7f070004
 			public const int listViewToDo = 2131165188;
 			
-			// aapt resource value: 0x7f070006
-			public const int menu_refresh = 2131165190;
+			// aapt resource value: 0x7f07000b
+			public const int lstUsuarios = 2131165195;
+			
+			// aapt resource value: 0x7f07000c
+			public const int menu_refresh = 2131165196;
+			
+			// aapt resource value: 0x7f07000d
+			public const int menu_refresh_users = 2131165197;
 			
 			// aapt resource value: 0x7f070002
 			public const int textNewToDo = 2131165186;
+			
+			// aapt resource value: 0x7f070007
+			public const int textRowPassword = 2131165191;
+			
+			// aapt resource value: 0x7f070006
+			public const int textRowUsuario = 2131165190;
 			
 			// aapt resource value: 0x7f070001
 			public const int textViewTitle = 2131165185;
@@ -100,6 +121,12 @@ namespace moitest1
 			// aapt resource value: 0x7f030001
 			public const int Row_List_To_Do = 2130903041;
 			
+			// aapt resource value: 0x7f030002
+			public const int Row_Usuario = 2130903042;
+			
+			// aapt resource value: 0x7f030003
+			public const int Usuario = 2130903043;
+			
 			static Layout()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -115,6 +142,9 @@ namespace moitest1
 			
 			// aapt resource value: 0x7f060000
 			public const int activity_main = 2131099648;
+			
+			// aapt resource value: 0x7f060001
+			public const int activity_users = 2131099649;
 			
 			static Menu()
 			{
@@ -138,11 +168,14 @@ namespace moitest1
 			// aapt resource value: 0x7f040000
 			public const int app_name = 2130968576;
 			
-			// aapt resource value: 0x7f040005
-			public const int checkbox_text = 2130968581;
+			// aapt resource value: 0x7f040006
+			public const int checkbox_text = 2130968582;
 			
 			// aapt resource value: 0x7f040004
 			public const int menu_refresh = 2130968580;
+			
+			// aapt resource value: 0x7f040005
+			public const int menu_refresh_users = 2130968581;
 			
 			// aapt resource value: 0x7f040003
 			public const int mobile_services = 2130968579;

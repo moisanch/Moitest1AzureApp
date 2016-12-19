@@ -4,6 +4,7 @@
     <string name="add_textbox_hint">Add a todo item</string>
     <string name="add_button_text">Add</string>
     <string name="mobile_services">Azure App Service</string>
-    <string name="menu_refresh">Refresh</string>
+    <string name="menu_refresh">Refrescar</string>
+    <string name="menu_refresh_users">Refrescar usuarios</string>
     <string name="checkbox_text">Item Text</string>
 </resources>

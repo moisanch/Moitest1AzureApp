@@ -5,7 +5,7 @@
  *
  * For more information, see: http://go.microsoft.com/fwlink/?LinkId=717898
  */
-//#define OFFLINE_SYNC_ENABLED
+#define OFFLINE_SYNC_ENABLED
 
 using System;
 using Android.OS;
@@ -24,29 +24,30 @@ using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 
 namespace moitest1
 {
-    [Activity(MainLauncher = false,
+    [Activity(MainLauncher = true,
                Icon = "@drawable/ic_launcher", Label = "@string/app_name",
                Theme = "@style/AppTheme")]
-    public class ToDoActivity : Activity
+    public class UsuarioActivity : Activity
     {
         // Client reference.
         private MobileServiceClient client;
 
 #if OFFLINE_SYNC_ENABLED
-        private IMobileServiceSyncTable<ToDoItem> todoTable;
+        private IMobileServiceSyncTable<Usuario> usuarioTable;
 
-        const string localDbFilename = "localstore.db";
+        const string localDbFilename = "moitest1.db";
 #else
         private IMobileServiceTable<ToDoItem> todoTable;
 #endif
 
-        // Adapter to map the items list to the view
-        private ToDoItemAdapter adapter;
+        // Adapter to map the users list to the view
+        private UsuarioAdapter adapter;
 
         // EditText containing the "New ToDo" text
-        private EditText textNewToDo;
+        private EditText etUsuario;
+        private EditText etPassword;
 
-		// URL of the mobile app backend.
+        // URL of the mobile app backend.
         const string applicationURL = @"https://moitest1.azurewebsites.net";
 
         protected override async void OnCreate(Bundle bundle)
@@ -54,7 +55,7 @@ namespace moitest1
             base.OnCreate(bundle);
 
             // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.Activity_To_Do);
+            SetContentView(Resource.Layout.Usuario);
 
             CurrentPlatform.Init();
 
@@ -63,18 +64,19 @@ namespace moitest1
 #if OFFLINE_SYNC_ENABLED
             await InitLocalStoreAsync();
 
-            // Get the sync table instance to use to store TodoItem rows.
-            todoTable = client.GetSyncTable<ToDoItem>();
+            // Get the sync table instance to use to store Usuario rows.
+            usuarioTable = client.GetSyncTable<Usuario>();
 #else
             todoTable = client.GetTable<ToDoItem>();
 #endif
 
-            textNewToDo = FindViewById<EditText>(Resource.Id.textNewToDo);
+            etUsuario = FindViewById<EditText>(Resource.Id.edtUsuario);
+            etPassword = FindViewById<EditText>(Resource.Id.edtPassword);
 
             // Create an adapter to bind the items with the view
-            adapter = new ToDoItemAdapter(this, Resource.Layout.Row_List_To_Do);
-            var listViewToDo = FindViewById<ListView>(Resource.Id.listViewToDo);
-            listViewToDo.Adapter = adapter;
+            adapter = new UsuarioAdapter(this, Resource.Layout.Row_Usuario);
+            var listViewUsers = FindViewById<ListView>(Resource.Id.lstUsuarios);
+            listViewUsers.Adapter = adapter;
 
             // Load the items from the mobile app backend.
             OnRefreshItemsSelected();
@@ -84,7 +86,7 @@ namespace moitest1
         private async Task InitLocalStoreAsync()
         {
             var store = new MobileServiceSQLiteStore(localDbFilename);
-            store.DefineTable<ToDoItem>();
+            store.DefineTable<Usuario>();
 
             // Uses the default conflict handler, which fails on conflict
             // To use a different conflict handler, pass a parameter to InitializeAsync.
@@ -98,7 +100,7 @@ namespace moitest1
                 await client.SyncContext.PushAsync();
 
                 if (pullData) {
-                    await todoTable.PullAsync("allTodoItems", todoTable.CreateQuery()); // query ID is used for incremental sync
+                    await usuarioTable.PullAsync("allUsuarios", usuarioTable.CreateQuery()); // query ID is used for incremental sync
                 }
             }
             catch (Java.Net.MalformedURLException) {
@@ -113,14 +115,15 @@ namespace moitest1
         //Initializes the activity menu
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            MenuInflater.Inflate(Resource.Menu.activity_main, menu);
+            MenuInflater.Inflate(Resource.Menu.activity_users, menu);
             return true;
         }
 
         //Select an option from the menu
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            if (item.ItemId == Resource.Id.menu_refresh) {
+            if (item.ItemId == Resource.Id.menu_refresh_users)
+            {
                 item.SetEnabled(false);
 
                 OnRefreshItemsSelected();
@@ -137,83 +140,94 @@ namespace moitest1
 			// Get changes from the mobile app backend.
             await SyncAsync(pullData: true);
 #endif
-			// refresh view using local store.
+            // refresh view using local store.
             await RefreshItemsFromTableAsync();
         }
 
-        //Refresh the list with the items in the local store.
+        //Refresh the list with the users in the local store.
         private async Task RefreshItemsFromTableAsync()
         {
-            try {
+            try
+            {
                 // Get the items that weren't marked as completed and add them in the adapter
-                var list = await todoTable.Where(item => item.Complete == false).ToListAsync();
+                var list = await usuarioTable.Where(item => item.Deleted == false).ToListAsync();
 
                 adapter.Clear();
 
-                foreach (ToDoItem current in list)
+                foreach (Usuario current in list)
                     adapter.Add(current);
 
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 CreateAndShowDialog(e, "Error");
             }
         }
 
-        public async Task CheckItem(ToDoItem item)
-        {
-            if (client == null) {
-                return;
-            }
+//        public async Task CheckItem(Usuario item)
+//        {
+//            if (client == null)
+//            {
+//                return;
+//            }
 
-            // Set the item as completed and update it in the table
-            item.Complete = true;
-            try {
-				// Update the new item in the local store.
-                await todoTable.UpdateAsync(item);
-#if OFFLINE_SYNC_ENABLED
-                // Send changes to the mobile app backend.
-				await SyncAsync();
-#endif
+//            // Set the item as completed and update it in the table
+//            item.Complete = true;
+//            try
+//            {
+//                // Update the new item in the local store.
+//                await todoTable.UpdateAsync(item);
+//#if OFFLINE_SYNC_ENABLED
+//                // Send changes to the mobile app backend.
+//				await SyncAsync();
+//#endif
 
-                if (item.Complete)
-                    adapter.Remove(item);
+//                if (item.Complete)
+//                    adapter.Remove(item);
 
-            }
-            catch (Exception e) {
-                CreateAndShowDialog(e, "Error");
-            }
-        }
+//            }
+//            catch (Exception e)
+//            {
+//                CreateAndShowDialog(e, "Error");
+//            }
+//        }
 
         [Java.Interop.Export()]
         public async void AddItem(View view)
         {
-            if (client == null || string.IsNullOrWhiteSpace(textNewToDo.Text)) {
+            if (client == null || string.IsNullOrWhiteSpace(etUsuario.Text) || string.IsNullOrWhiteSpace(etUsuario.Text) )
+            {
                 return;
             }
 
-            // Create a new item
-            var item = new ToDoItem {
-                Text = textNewToDo.Text,
-                Complete = false
+            // Create a new user
+            var user = new Usuario
+            {
+                User = etUsuario.Text,
+                Pass = etPassword.Text
             };
 
-            try {
-				// Insert the new item into the local store.
-                await todoTable.InsertAsync(item);
+            try
+            {
+                // Insert the new item into the local store.
+                await usuarioTable.InsertAsync(user);
 #if OFFLINE_SYNC_ENABLED
                 // Send changes to the mobile app backend.
 				await SyncAsync();
 #endif
 
-                if (!item.Complete) {
-                    adapter.Add(item);
+                if (!user.Deleted)
+                {
+                    adapter.Add(user);
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 CreateAndShowDialog(e, "Error");
             }
 
-            textNewToDo.Text = "";
+            etUsuario.Text = "";
+            etPassword.Text = "";
         }
 
         private void CreateAndShowDialog(Exception exception, String title)
@@ -231,5 +245,3 @@ namespace moitest1
         }
     }
 }
-
-
