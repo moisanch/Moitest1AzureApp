@@ -16,6 +16,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 using moitest1;
+using moitest1.RepoDb;
 
 #if OFFLINE_SYNC_ENABLED
 using Microsoft.WindowsAzure.MobileServices.Sync;
@@ -24,21 +25,21 @@ using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 
 namespace moitest1
 {
-    [Activity(MainLauncher = true,
+    [Activity(MainLauncher = false,
                Icon = "@drawable/ic_launcher", Label = "@string/app_name",
                Theme = "@style/AppTheme")]
     public class UsuarioActivity : Activity
     {
-        // Client reference.
-        private MobileServiceClient client;
+//        // Client reference.
+//        private MobileServiceClient client;
 
-#if OFFLINE_SYNC_ENABLED
-        private IMobileServiceSyncTable<Usuario> usuarioTable;
+//#if OFFLINE_SYNC_ENABLED
+//        private IMobileServiceSyncTable<Usuario> usuarioTable;
 
-        const string localDbFilename = "moitest1.db";
-#else
-        private IMobileServiceTable<ToDoItem> todoTable;
-#endif
+//        const string localDbFilename = "moitest1.db";
+//#else
+//        private IMobileServiceTable<ToDoItem> todoTable;
+//#endif
 
         // Adapter to map the users list to the view
         private UsuarioAdapter adapter;
@@ -47,8 +48,10 @@ namespace moitest1
         private EditText etUsuario;
         private EditText etPassword;
 
-        // URL of the mobile app backend.
-        const string applicationURL = @"https://moitest1.azurewebsites.net";
+        //// URL of the mobile app backend.
+        //const string applicationURL = @"https://moitest1.azurewebsites.net";
+
+        RepoDb db = new RepoDb();
 
         protected override async void OnCreate(Bundle bundle)
         {
