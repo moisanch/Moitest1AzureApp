@@ -33,11 +33,25 @@ namespace moitest1
     [Activity(MainLauncher = true, Icon = "@drawable/ic_launcher", Label = "Main",  Theme = "@style/AppTheme")]
     public class Main : Activity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
+        Button btnUsuarios;
+
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.Main);
+
+            CurrentPlatform.Init();
+
+            btnUsuarios = FindViewById<Button>(Resource.Id.btnUsuarios);
+
+            btnUsuarios.Click += BtnUsuarios_Click;
+
+        }
+
+        private void BtnUsuarios_Click(object sender, EventArgs e)
+        {
+            StartActivity(typeof(UsuarioActivity));
         }
     }
 }
